@@ -137,16 +137,20 @@ if __name__ == '__main__':
   #
   # Get parameters
   #
-  print("#\n# Parameters\n#")
   
-  p = dict()
+  #print("#\n# Parameters\n#")
+  #p = dict()
   
-  # channels
+  #
+  # Analyse input filenames
+  #
+  
   file_names = [f.split(os.path.sep)[-1] for f in files]
-  file_endings = [fn.split('--')[-1] for fn in file_names]
+  file_endings = list(set([fn.split('--')[-1] for fn in file_names]))
+  file_roots = sorted(list(set(['--'.join(f.split('--')[0:-1]) for f in files])))
+  #for fr in file_roots:
+  #  print fr
   
-  p["channels"] = list(set(file_endings))
-
   #
   # Get parameters
   #
@@ -158,20 +162,18 @@ if __name__ == '__main__':
   # Init interactive table
   #
   
-  for ch in p["channels"]:
-    tbModel.addFileColumns(ch,'IMG')
+  for fe in file_endings:
+    tbModel.addFileColumns(fe,'IMG')
    
-  sorted_files = sorted(files)
-  print("#\n# Image sets to be shown\n#")
-  for ch in p["channels"]:
-    iDataSet = 0
-    for afile in sorted_files:
-      if ch in afile.split(os.path.sep)[-1]:
-        if ch == p["channels"][0]:
-          tbModel.addRow()
-        tbModel.setFileAbsolutePath(afile, iDataSet, ch,"IMG")
-        print(str(iDataSet)+": "+afile)
-        iDataSet = iDataSet + 1
-
+  #print("#\n# Image sets to be shown\n#")
+  for iDataSet,fr in enumerate(file_roots):
+    tbModel.addRow()
+    for fe in file_endings:
+      file_path = fr+'--'+fe
+      if file_path in files:
+        tbModel.setFileAbsolutePath(file_path, iDataSet, fe,"IMG")
+      else:
+        print("missing file: "+file_path)
+  
   frame=ManualControlFrame(tbModel)
   frame.setVisible(True)
