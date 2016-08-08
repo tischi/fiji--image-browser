@@ -13,3 +13,7 @@ For questions please contact: tischitischer@gmail.com
 ### run it
 
 - drag __fiji--image-browser.py__ onto Fiji and [Run]
+
+### usage notes
+
+- if you examine your images in a zoomed-in mode you have to check __Fit image to frame__ on the left of the table.
